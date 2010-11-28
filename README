@@ -1,0 +1,43 @@
+QST - QT Serial Terminal
+
+Implements a terminal program using QT and the QExtSerialPort library.
+
+This terminal program mixes the input and output into one terminal
+window, unlike other terminal programs which have separate input and
+output boxes.  The intended use of the program is to communicate with
+embedded systems over a serial port.
+
+The program builds for both Windows XP and Linux platforms.  See other
+README files for details.  There is no MAC port yet, because I don't
+have access to a MAC.  Feel free to port to the MAC and send me back
+the patches.
+
+Currently the program only supports N-8-1 serial format.  It should be
+simple to use E-7-1, but I don't have any embedded devices that use
+that format, so it isn't implemented.
+
+Arranging the sources:
+
+QST depends on the QExtSerialPort library.  You must obtain the source
+for QExtSerialPort from http://code.google.com/p/qextserialport/.  Do
+not use the older version from SourceForge.
+
+Place the QExtSerialPort source directory alongside the QST directory,
+like this:
+
+somedir
+   qextserialport/
+   qst/
+
+Building:
+
+Build the qextserialport project first. Using QTCreator, open the
+project in qextserialport/src, not the project in qextserialport/.
+That project builds some example programs that we don't need.  You
+should end up with a library file (libqextserialportd.a) or DLL
+(libqextserialportd.dll) on Win32.
+
+Now build the QST project.  You may need to adjust the paths in the
+qst.pro file if the compilation fails.  Especially on windows, where
+the qextserialport library filenames and paths seem to change of their
+own accord.
