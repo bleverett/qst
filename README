@@ -4,7 +4,7 @@ Implements a terminal program using QT and the QExtSerialPort library.
 
 This terminal program mixes the input and output into one terminal
 window, unlike other terminal programs which have separate input and
-output boxes.  The intended use of the program is to communicate with
+output windows.  The intended use of the program is to communicate with
 embedded systems over a serial port.
 
 The program builds for both Windows XP and Linux platforms.  See other
@@ -13,7 +13,7 @@ have access to a MAC.  Feel free to port to the MAC and send me back
 the patches.
 
 Currently the program only supports N-8-1 serial format.  It should be
-simple to use E-7-1, but I don't have any embedded devices that use
+simple to support E-7-1, but I don't have any embedded devices that use
 that format, so it isn't implemented.
 
 Arranging the sources:
