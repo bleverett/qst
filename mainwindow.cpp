@@ -20,6 +20,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(actionSave_Screen, SIGNAL(triggered()), this, SLOT(saveScreen()));
     connect(actionBegin_Logging, SIGNAL(triggered()), this, SLOT(startLogging()));
     connect(actionEnd_Logging, SIGNAL(triggered()), this, SLOT(endLogging()));
+    connect(actionAbout_Qt, SIGNAL(triggered()), this, SLOT(aboutQt()));
 
     baudRates[0] = BAUD300;
     baudRates[1] = BAUD2400;
@@ -377,4 +378,9 @@ void MainWindow::startLogging(void)
 void MainWindow::endLogging(void)
 {
     logFile->close();
+}
+
+void MainWindow::aboutQt(void)
+{
+    QMessageBox::aboutQt(this, "About Qt");
 }

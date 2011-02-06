@@ -14,7 +14,7 @@
    <string>Q Serial Terminal</string>
   </property>
   <property name="windowIcon">
-   <iconset resource="qst.qrc">
+   <iconset>
     <normaloff>:/img/qst-icon.png</normaloff>:/img/qst-icon.png</iconset>
   </property>
   <widget class="QWidget" name="centralWidget">
@@ -68,12 +68,6 @@
     <addaction name="actionEnd_Logging"/>
     <addaction name="actionExit"/>
    </widget>
-   <widget class="QMenu" name="menuHelp">
-    <property name="title">
-     <string>Help</string>
-    </property>
-    <addaction name="actionAbout"/>
-   </widget>
    <widget class="QMenu" name="menuEdit">
     <property name="title">
      <string>Edit</string>
@@ -92,6 +86,13 @@
     </property>
     <addaction name="actionConfig"/>
     <addaction name="actionStart_Stop_Comm"/>
+   </widget>
+   <widget class="QMenu" name="menuHelp">
+    <property name="title">
+     <string>Help</string>
+    </property>
+    <addaction name="actionAbout"/>
+    <addaction name="actionAbout_Qt"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuEdit"/>
@@ -203,11 +204,14 @@
     <string>Ctrl+A</string>
    </property>
   </action>
+  <action name="actionAbout_Qt">
+   <property name="text">
+    <string>About Qt</string>
+   </property>
+  </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
- <resources>
-  <include location="qst.qrc"/>
- </resources>
+ <resources/>
  <connections>
   <connection>
    <sender>actionExit</sender>
@@ -262,22 +266,6 @@
    <signal>activated()</signal>
    <receiver>textEdit</receiver>
    <slot>copy()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>-1</x>
-     <y>-1</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>302</x>
-     <y>216</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>actionPaste</sender>
-   <signal>activated()</signal>
-   <receiver>textEdit</receiver>
-   <slot>paste()</slot>
    <hints>
     <hint type="sourcelabel">
      <x>-1</x>

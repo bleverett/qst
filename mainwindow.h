@@ -23,6 +23,7 @@ public:
 
 public slots:
     void startStopComm(void);
+    void aboutQt(void);
 
 private slots:
     void config(void);
