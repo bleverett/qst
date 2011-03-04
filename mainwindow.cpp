@@ -299,8 +299,33 @@ void MainWindow::pollSerial(void)
         logFile->write(bytes);
     }
     bytes.replace("\r", "");
-    textEdit->moveCursor(QTextCursor::End);
-    textEdit->insertPlainText(bytes);
+    if (bytes.contains(8))
+    {
+        // Must parse backspace commands manually
+        for (int i=0;i<bytes.count();i++)
+        {
+            char ch = bytes.at(i);
+            if (ch == 8)
+            {
+                // Backspace
+                QString s = textEdit->toPlainText();
+                s.chop(1);
+                textEdit->setPlainText(s);
+            }
+            else
+            {
+                // Add char to edit
+                QString s(ch);
+                textEdit->insertPlainText(s);
+            }
+            textEdit->moveCursor(QTextCursor::End);
+        }
+    }
+    else
+    {
+        textEdit->moveCursor(QTextCursor::End);
+        textEdit->insertPlainText(bytes);
+    }
     textEdit->ensureCursorVisible();
     rxLed->setActive(true);
 }
