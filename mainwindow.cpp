@@ -403,6 +403,7 @@ void MainWindow::startLogging(void)
 void MainWindow::endLogging(void)
 {
     logFile->close();
+    delete logFile;
 }
 
 void MainWindow::aboutQt(void)
