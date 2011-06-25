@@ -42,8 +42,13 @@ MainWindow::MainWindow(QWidget *parent)
     connect(&timer, SIGNAL(timeout()), this, SLOT(pollSerial()));
     timer.start(100);
 
+    // Get settings from config file (or, god forbid, registry)
     QSettings settings("QTapps","QST");
-    if (settings.value("openAtStart").toBool())
+    baudNdx     = settings.value("baudNdx").toInt();
+    hwFlow      = settings.value("hwflow").toBool();
+    openAtStart = settings.value("openAtStart").toBool();
+    deviceName  = settings.value("device").toString();
+    if (openAtStart)
         startStopComm();
 
     layout()->setSpacing(1);
@@ -152,22 +157,19 @@ void MainWindow::startStopComm(void)
     else
     {
         // Start comm
-        // Load settings
-        QSettings settings("QTapps","QST");
-        baudNdx = settings.value("baudNdx", 3).toInt();
         QString device;
 #ifdef _TTY_POSIX_
         device = QString("/dev/");
+#else
+        device.clear();
 #endif
-        device += settings.value("device").toString();
-        bool flowControl = settings.value("hwflow").toBool();
-
+        device += deviceName;
         port = new QextSerialPort(device, QextSerialPort::Polling);
         port->setBaudRate((BaudRateType)baudRates[baudNdx]);
         port->setDataBits(DATA_8);
         port->setParity(PAR_NONE);
         port->setStopBits(STOP_1);
-        port->setFlowControl(flowControl ? FLOW_HARDWARE : FLOW_OFF);
+        port->setFlowControl(hwFlow ? FLOW_HARDWARE : FLOW_OFF);
         port->setTimeout(100);
 
         if (!port->open(QIODevice::ReadWrite))
@@ -212,12 +214,9 @@ void MainWindow::config(void)
     bg.addButton(dlgUi.rb115200, 7);
 
     // Load settings
-    QSettings settings("QTapps","QST");
-    dlgUi.cbHwFlow->setChecked(settings.value("hwflow").toBool());
-    dlgUi.cbOpenStart->setChecked(settings.value("openAtStart").toBool());
-    int baudNdx = settings.value("baudNdx", 3).toInt();
+    dlgUi.cbHwFlow->setChecked(hwFlow);
+    dlgUi.cbOpenStart->setChecked(openAtStart);
     bg.button(baudNdx)->setChecked(true);
-    QString device = settings.value("device").toString();
 
     // Find serial ports available
 #ifdef _TTY_POSIX_
@@ -252,7 +251,7 @@ void MainWindow::config(void)
     {
         if (!devices.at(i).contains("ttys"))
             dlgUi.listPorts->addItem(devices.at(i));
-        if (devices.at(i) == device)
+        if (devices.at(i) == deviceName)
             selectedDevice = devices.at(i);
     }
     if (!selectedDevice.isEmpty())
@@ -267,6 +266,7 @@ void MainWindow::config(void)
     if (config.result() == QDialog::Accepted)
     {
         // Save settings
+        QSettings settings;
         settings.setValue("hwflow", dlgUi.cbHwFlow->isChecked());
         settings.setValue("openAtStart", dlgUi.cbOpenStart->isChecked());
         settings.setValue("baudNdx", bg.checkedId());
@@ -277,6 +277,10 @@ void MainWindow::config(void)
             delete port;
             port = NULL;
         }
+
+        hwFlow = dlgUi.cbHwFlow->isChecked();
+        baudNdx = bg.checkedId();
+        deviceName = dlgUi.listPorts->currentItem()->text();
 
         startStopComm();
     }

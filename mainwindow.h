@@ -43,7 +43,13 @@ private:
     QTimer timer;
     void updateStatusBar(void);
     QWidgetList sbList;
+
+    // Settings from config file
     int baudNdx;
+    bool hwFlow;
+    bool openAtStart;
+    QString deviceName;
+
     QLed *txLed;  // Green left LED
     QLed *rxLed;  // Red right LED
     QFile *logFile;
