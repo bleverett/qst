@@ -266,7 +266,7 @@ void MainWindow::config(void)
     if (config.result() == QDialog::Accepted)
     {
         // Save settings
-        QSettings settings;
+        QSettings settings("QTapps","QST");
         settings.setValue("hwflow", dlgUi.cbHwFlow->isChecked());
         settings.setValue("openAtStart", dlgUi.cbOpenStart->isChecked());
         settings.setValue("baudNdx", bg.checkedId());
