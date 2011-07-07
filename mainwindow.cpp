@@ -406,8 +406,12 @@ void MainWindow::startLogging(void)
 
 void MainWindow::endLogging(void)
 {
-    logFile->close();
-    delete logFile;
+    if (logFile)
+    {
+        logFile->close();
+        delete logFile;
+        logFile = NULL;
+    }
 }
 
 void MainWindow::aboutQt(void)
