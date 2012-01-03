@@ -301,6 +301,7 @@ void MainWindow::pollSerial(void)
     if (logFile)
     {
         logFile->write(bytes);
+        logFile->flush();
     }
     bytes.replace("\r", "");
     if (bytes.contains(8))
