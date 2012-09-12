@@ -8,8 +8,8 @@ output windows.  The intended use of the program is to communicate with
 embedded systems over a serial port.
 
 The program builds for both Windows XP and Linux platforms.  See other
-README files for details.  There is no MAC port yet, because I don't
-have access to a MAC.  Feel free to port to the MAC and send me back
+README files for details.  There is no Mac port yet, because I don't
+have access to a Mac.  Feel free to port to the Mac and send me back
 the patches.
 
 Currently the program only supports N-8-1 serial format.  It should be
@@ -20,24 +20,52 @@ Arranging the sources:
 
 QST depends on the QExtSerialPort library.  You must obtain the source
 for QExtSerialPort from http://code.google.com/p/qextserialport/.  Do
-not use the older version from SourceForge.
+not use the older version from SourceForge.  Either download the
+Version 1.2 (or higher) or use git to clone the repository.
 
 Place the QExtSerialPort source directory alongside the QST directory,
 like this:
 
-somedir
+somedir/
    qextserialport/
    qst/
 
 Building:
 
-Build the qextserialport project first. Using QTCreator, open the
-project in qextserialport/src, not the project in qextserialport/.
-That project builds some example programs that we don't need.  You
-should end up with a library file (libqextserialportd.a) or DLL
-(libqextserialportd.dll) on Win32.
+Qt Creator: Open the file qst/qst.pro.  This should open the project.
+Now compile by pressing the compile button or from the Build menu on
+the main menu.
 
-Now build the QST project.  You may need to adjust the paths in the
-qst.pro file if the compilation fails.  Especially on windows, where
-the qextserialport library filenames and paths seem to change of their
-own accord.
+Command line:  Go to the qst directory.  Type this:
+
+qmake
+make
+
+The project should build.
+
+
+Building QST on Linux
+
+If the compile fails, it is probably a path error, where the compiler
+is unable to find the qextserialport include or library files.  You
+may have to edit the paths inside the qst.pro file to correct this.
+
+
+Building QST on Windows XP
+
+There has been an issue with the compiler complaining about missing
+file "qwineventnotifier_p.h".  This can be remedied by getting a copy
+of this file from the qt source tarball and placing it in the
+qextserialport/src/ directory.  Hopefully this issue will be fixed by
+the qextserialport developers soon.
+
+To run the program outside of QTCreator, you will have to copy a bunch
+of DLL files to the same directory where the qst.exe file is located.
+To find out what these dll files are, you can simply try to execute
+the qst.exe file, and fix each "missing dll" error by copying the
+correct dll file into the same directory as the qst.exe file, or to
+wherever system DLL's are expected to live in windows.
+
+Or just download the pre-compiled installer, which includes the DLL's.
+
+
