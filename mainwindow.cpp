@@ -160,8 +160,6 @@ void MainWindow::startStopComm(void)
         QString device;
 #ifdef _TTY_POSIX_
         device = QString("/dev/");
-#else
-        device.clear();
 #endif
         device += deviceName;
         port = new QextSerialPort(device, QextSerialPort::Polling);
@@ -180,15 +178,6 @@ void MainWindow::startStopComm(void)
             s += device;
             QMessageBox::critical(this,"Error",s);
         }
-#ifdef _TTY_WIN_
-        // For win32, you have to re-do this crap after opening.
-        port->setBaudRate((BaudRateType)baudRates[baudNdx]);
-        port->setDataBits(DATA_8);
-        port->setParity(PAR_NONE);
-        port->setStopBits(STOP_1);
-        port->setFlowControl(flowControl ? FLOW_HARDWARE : FLOW_OFF);
-        port->setTimeout(0);
-#endif
     }
     // Update status bar
     updateStatusBar();
