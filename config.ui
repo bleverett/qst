@@ -48,7 +48,7 @@
      <x>180</x>
      <y>30</y>
      <width>131</width>
-     <height>201</height>
+     <height>211</height>
     </rect>
    </property>
    <property name="title">
@@ -58,7 +58,7 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>30</y>
+      <y>20</y>
       <width>114</width>
       <height>21</height>
      </rect>
@@ -71,7 +71,7 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>50</y>
+      <y>60</y>
       <width>114</width>
       <height>21</height>
      </rect>
@@ -84,7 +84,7 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>70</y>
+      <y>80</y>
       <width>114</width>
       <height>21</height>
      </rect>
@@ -97,7 +97,7 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>90</y>
+      <y>100</y>
       <width>114</width>
       <height>21</height>
      </rect>
@@ -110,7 +110,7 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>110</y>
+      <y>120</y>
       <width>114</width>
       <height>21</height>
      </rect>
@@ -123,7 +123,7 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>130</y>
+      <y>140</y>
       <width>114</width>
       <height>21</height>
      </rect>
@@ -136,7 +136,7 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>150</y>
+      <y>160</y>
       <width>114</width>
       <height>21</height>
      </rect>
@@ -149,13 +149,26 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>170</y>
+      <y>180</y>
       <width>114</width>
       <height>21</height>
      </rect>
     </property>
     <property name="text">
      <string>115200</string>
+    </property>
+   </widget>
+   <widget class="QRadioButton" name="rb1200">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>40</y>
+      <width>114</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>1200</string>
     </property>
    </widget>
   </widget>
@@ -191,7 +204,7 @@
      <x>20</x>
      <y>30</y>
      <width>151</width>
-     <height>201</height>
+     <height>211</height>
     </rect>
    </property>
   </widget>
@@ -199,7 +212,7 @@
    <property name="geometry">
     <rect>
      <x>190</x>
-     <y>230</y>
+     <y>250</y>
      <width>121</width>
      <height>16</height>
     </rect>

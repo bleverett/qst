@@ -38,7 +38,7 @@ private:
     bool eventFilter(QObject *obj, QEvent *event);
     QextSerialPort *port;
 
-    int baudRates[8];
+    int baudRates[9];
     QStringList baudRateStrings;
     QTimer timer;
     void updateStatusBar(void);

@@ -23,14 +23,16 @@ MainWindow::MainWindow(QWidget *parent)
     connect(actionAbout_Qt, SIGNAL(triggered()), this, SLOT(aboutQt()));
 
     baudRates[0] = BAUD300;
-    baudRates[1] = BAUD2400;
-    baudRates[2] = BAUD4800;
-    baudRates[3] = BAUD9600;
-    baudRates[4] = BAUD19200;
-    baudRates[5] = BAUD38400;
-    baudRates[6] = BAUD57600;
-    baudRates[7] = BAUD115200;
+    baudRates[1] = BAUD1200;
+    baudRates[2] = BAUD2400;
+    baudRates[3] = BAUD4800;
+    baudRates[4] = BAUD9600;
+    baudRates[5] = BAUD19200;
+    baudRates[6] = BAUD38400;
+    baudRates[7] = BAUD57600;
+    baudRates[8] = BAUD115200;
     baudRateStrings.append("300");
+    baudRateStrings.append("1200");
     baudRateStrings.append("2400");
     baudRateStrings.append("4800");
     baudRateStrings.append("9600");
@@ -194,13 +196,14 @@ void MainWindow::config(void)
     // Setup button group for baud rate settings
     QButtonGroup bg;
     bg.addButton(dlgUi.rb300, 0);
-    bg.addButton(dlgUi.rb2400, 1);
-    bg.addButton(dlgUi.rb4800, 2);
-    bg.addButton(dlgUi.rb9600, 3);
-    bg.addButton(dlgUi.rb19200, 4);
-    bg.addButton(dlgUi.rb38400, 5);
-    bg.addButton(dlgUi.rb57600, 6);
-    bg.addButton(dlgUi.rb115200, 7);
+    bg.addButton(dlgUi.rb1200, 1);
+    bg.addButton(dlgUi.rb2400, 2);
+    bg.addButton(dlgUi.rb4800, 3);
+    bg.addButton(dlgUi.rb9600, 4);
+    bg.addButton(dlgUi.rb19200, 5);
+    bg.addButton(dlgUi.rb38400, 6);
+    bg.addButton(dlgUi.rb57600, 7);
+    bg.addButton(dlgUi.rb115200, 8);
 
     // Load settings
     dlgUi.cbHwFlow->setChecked(hwFlow);
