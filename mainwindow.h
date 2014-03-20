@@ -2,7 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QtGui/QMainWindow>
-#include "qextserialport.h"
+#include <QtExtSerialPort/qextserialport.h>
 #include <QTimer>
 #include <QFile>
 #include "ui_mainwindow.h"
