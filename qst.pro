@@ -1,7 +1,7 @@
 # -------------------------------------------------
 # Project created by QtCreator 2010-03-28T13:06:00
 # -------------------------------------------------
-include(/usr/share/qt4/mkspecs/features/extserialport.prf)
+include(../qextserialport/src/qextserialport.pri)
 
 TARGET = qst
 TEMPLATE = app

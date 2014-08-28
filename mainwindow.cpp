@@ -5,8 +5,7 @@
 #include <QTimer>
 #include "ui_config.h"
 #include "ui_about.h"
-//#include "qextserialenumerator.h"
-#include <QtExtSerialPort/qextserialenumerator.h>
+#include "qextserialenumerator.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent), port(0), logFile(NULL)
