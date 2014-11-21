@@ -22,24 +22,23 @@ MainWindow::MainWindow(QWidget *parent)
     connect(actionEnd_Logging, SIGNAL(triggered()), this, SLOT(endLogging()));
     connect(actionAbout_Qt, SIGNAL(triggered()), this, SLOT(aboutQt()));
 
-    baudRates[0] = BAUD300;
-    baudRates[1] = BAUD1200;
-    baudRates[2] = BAUD2400;
-    baudRates[3] = BAUD4800;
-    baudRates[4] = BAUD9600;
-    baudRates[5] = BAUD19200;
-    baudRates[6] = BAUD38400;
-    baudRates[7] = BAUD57600;
-    baudRates[8] = BAUD115200;
-    baudRateStrings.append("300");
-    baudRateStrings.append("1200");
-    baudRateStrings.append("2400");
-    baudRateStrings.append("4800");
+    baudRates[0] = BAUD9600;
+    baudRates[1] = BAUD19200;
+    baudRates[2] = BAUD38400;
+    baudRates[3] = BAUD57600;
+    baudRates[4] = BAUD115200;
+    baudRates[5] = BAUD230400;
+    baudRates[6] = BAUD460800;
+    baudRates[7] = BAUD921600;
+
     baudRateStrings.append("9600");
     baudRateStrings.append("19200");
     baudRateStrings.append("38400");
     baudRateStrings.append("57600");
     baudRateStrings.append("115200");
+    baudRateStrings.append("230400");
+    baudRateStrings.append("460800");
+    baudRateStrings.append("921600");
 
     connect(&timer, SIGNAL(timeout()), this, SLOT(pollSerial()));
     timer.start(100);
@@ -195,15 +194,14 @@ void MainWindow::config(void)
 
     // Setup button group for baud rate settings
     QButtonGroup bg;
-    bg.addButton(dlgUi.rb300, 0);
-    bg.addButton(dlgUi.rb1200, 1);
-    bg.addButton(dlgUi.rb2400, 2);
-    bg.addButton(dlgUi.rb4800, 3);
-    bg.addButton(dlgUi.rb9600, 4);
-    bg.addButton(dlgUi.rb19200, 5);
-    bg.addButton(dlgUi.rb38400, 6);
-    bg.addButton(dlgUi.rb57600, 7);
-    bg.addButton(dlgUi.rb115200, 8);
+    bg.addButton(dlgUi.rb9600, 0);
+    bg.addButton(dlgUi.rb19200, 1);
+    bg.addButton(dlgUi.rb38400, 2);
+    bg.addButton(dlgUi.rb57600, 3);
+    bg.addButton(dlgUi.rb115200, 4);
+    bg.addButton(dlgUi.rb230400, 5);
+    bg.addButton(dlgUi.rb460800, 6);
+    bg.addButton(dlgUi.rb921600, 7);
 
     // Load settings
     dlgUi.cbHwFlow->setChecked(hwFlow);
@@ -296,29 +294,29 @@ void MainWindow::pollSerial(void)
         logFile->flush();
     }
     bytes.replace("\r", "");
-    if (bytes.contains(8))
-    {
-        // Must parse backspace commands manually
-        for (int i=0;i<bytes.count();i++)
-        {
-            char ch = bytes.at(i);
-            if (ch == 8)
-            {
-                // Backspace
-                QString s = textEdit->toPlainText();
-                s.chop(1);
-                textEdit->setPlainText(s);
-            }
-            else
-            {
-                // Add char to edit
-                QString s(ch);
-                textEdit->insertPlainText(s);
-            }
-            textEdit->moveCursor(QTextCursor::End);
-        }
-    }
-    else
+//    if (bytes.contains(8))
+//    {
+//        // Must parse backspace commands manually
+//        for (int i=0;i<bytes.count();i++)
+//        {
+//            char ch = bytes.at(i);
+//            if (ch == 8)
+//            {
+//                // Backspace
+//                QString s = textEdit->toPlainText();
+//                s.chop(1);
+//                textEdit->setPlainText(s);
+//            }
+//            else
+//            {
+//                // Add char to edit
+//                QString s(ch);
+//                textEdit->insertPlainText(s);
+//            }
+//            textEdit->moveCursor(QTextCursor::End);
+//        }
+//    }
+//    else
     {
         textEdit->moveCursor(QTextCursor::End);
         textEdit->insertPlainText(bytes);
