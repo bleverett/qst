@@ -50,6 +50,10 @@ MainWindow::MainWindow(QWidget *parent)
     openAtStart = settings.value("openAtStart").toBool();
     deviceName  = settings.value("device").toString();
 
+    int brcount = sizeof(baudRates)/sizeof(int);
+    if (baudNdx >= brcount)
+        baudNdx = 0;
+
 
     layout()->setSpacing(1);
 
