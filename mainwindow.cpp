@@ -49,8 +49,7 @@ MainWindow::MainWindow(QWidget *parent)
     hwFlow      = settings.value("hwflow").toBool();
     openAtStart = settings.value("openAtStart").toBool();
     deviceName  = settings.value("device").toString();
-    if (openAtStart)
-        startStopComm();
+
 
     layout()->setSpacing(1);
 
@@ -75,6 +74,8 @@ MainWindow::MainWindow(QWidget *parent)
     }
     verticalLayout->setMargin(1);
     updateStatusBar();
+    if (openAtStart)
+        startStopComm();
 }
 
 // Grab keypresses meant for edit, send to serial port.
@@ -102,6 +103,7 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *event)
 
 void MainWindow::updateStatusBar(void)
 {
+    if(sbList.isEmpty())return;
     for (int i=0;i<6;i++)
     {
         sbList.at(i)->hide();
@@ -260,6 +262,8 @@ void MainWindow::config(void)
         settings.setValue("hwflow", dlgUi.cbHwFlow->isChecked());
         settings.setValue("openAtStart", dlgUi.cbOpenStart->isChecked());
         settings.setValue("baudNdx", bg.checkedId());
+        if(dlgUi.listPorts->selectedItems().count()!=1)
+            dlgUi.listPorts->setCurrentRow(0);
         settings.setValue("device", dlgUi.listPorts->currentItem()->text());
         // Open serial port
         if (port)
