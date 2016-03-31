@@ -218,21 +218,18 @@ void MainWindow::config(void)
     dir.setNameFilters(filterList);
     QStringList devices = dir.entryList(QDir::System);
 #elif defined(_TTY_WIN_)
-    QList< QextPortInfo > list = QextSerialEnumerator::getPorts();
+    QList< QSerialPortInfo > list = QSerialPortInfo::availablePorts();
     QStringList devices;
     for (int i=0;i<list.count();i++)
     {
-        QString s = list.at(i).portName;
-        char t[20];
+        QString s = list.at(i).portName();
         for(int j=0;j<s.length();j++)
         {
-            if (!isprint((int)s.at(j).toAscii()))
+            if (!isprint((int)s.at(j).toLatin1()))
             {
                 s.resize(j);
                 break;
             }
-            else
-                t[j] = s.at(j).toAscii();
         }
         devices.append(s);
     }
