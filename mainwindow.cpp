@@ -1,11 +1,12 @@
-#include "mainwindow.h"
 #include <QSettings>
 #include <QMessageBox>
 #include <QFileDialog>
 #include <QTimer>
+#include <QSerialPort>
+#include <QSerialPortInfo>
+#include "mainwindow.h"
 #include "ui_config.h"
 #include "ui_about.h"
-#include "qextserialenumerator.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent), port(0), logFile(NULL)
@@ -22,14 +23,11 @@ MainWindow::MainWindow(QWidget *parent)
     connect(actionEnd_Logging, SIGNAL(triggered()), this, SLOT(endLogging()));
     connect(actionAbout_Qt, SIGNAL(triggered()), this, SLOT(aboutQt()));
 
-    baudRates[0] = BAUD9600;
-    baudRates[1] = BAUD19200;
-    baudRates[2] = BAUD38400;
-    baudRates[3] = BAUD57600;
-    baudRates[4] = BAUD115200;
-    baudRates[5] = BAUD230400;
-    baudRates[6] = BAUD460800;
-    baudRates[7] = BAUD921600;
+    baudRates[0] = QSerialPort::Baud9600;
+    baudRates[1] = QSerialPort::Baud19200;
+    baudRates[2] = QSerialPort::Baud38400;
+    baudRates[3] = QSerialPort::Baud57600;
+    baudRates[4] = QSerialPort::Baud115200;
 
     baudRateStrings.append("9600");
     baudRateStrings.append("19200");
@@ -93,7 +91,7 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *event)
             QString s = keyEvent->text();
             if (s.length())
             {
-                char ch = s.at(0).toAscii();
+                char ch = s.at(0).toLatin1();
                 port->putChar(ch);
                 txLed->setActive(true);
             }
@@ -169,13 +167,13 @@ void MainWindow::startStopComm(void)
         device = QString("/dev/");
 #endif
         device += deviceName;
-        port = new QextSerialPort(device, QextSerialPort::Polling);
-        port->setBaudRate((BaudRateType)baudRates[baudNdx]);
-        port->setDataBits(DATA_8);
-        port->setParity(PAR_NONE);
-        port->setStopBits(STOP_1);
-        port->setFlowControl(hwFlow ? FLOW_HARDWARE : FLOW_OFF);
-        port->setTimeout(100);
+        QSerialPortInfo pinfo;
+        port = new QSerialPort(device, this);
+        port->setBaudRate(baudRates[baudNdx]);
+        port->setDataBits(QSerialPort::Data8);
+        port->setParity(QSerialPort::NoParity);
+        port->setStopBits(QSerialPort::OneStop);
+        port->setFlowControl(hwFlow ? QSerialPort::HardwareControl : QSerialPort::NoFlowControl);
 
         if (!port->open(QIODevice::ReadWrite))
         {
@@ -205,9 +203,6 @@ void MainWindow::config(void)
     bg.addButton(dlgUi.rb38400, 2);
     bg.addButton(dlgUi.rb57600, 3);
     bg.addButton(dlgUi.rb115200, 4);
-    bg.addButton(dlgUi.rb230400, 5);
-    bg.addButton(dlgUi.rb460800, 6);
-    bg.addButton(dlgUi.rb921600, 7);
 
     // Load settings
     dlgUi.cbHwFlow->setChecked(hwFlow);
@@ -375,7 +370,7 @@ void MainWindow::saveScreen(void)
         return;
     }
 
-    file.write(textEdit->toPlainText().toAscii());
+    file.write(textEdit->toPlainText().toLatin1());
 
     file.close();
 }

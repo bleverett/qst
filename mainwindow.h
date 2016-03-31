@@ -1,8 +1,8 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
-#include <QtGui/QMainWindow>
-#include "qextserialport.h"
+#include <QMainWindow>
+#include <QtSerialPort/QSerialPort>
 #include <QTimer>
 #include <QFile>
 #include "ui_mainwindow.h"
@@ -36,9 +36,9 @@ private slots:
 
 private:
     bool eventFilter(QObject *obj, QEvent *event);
-    QextSerialPort *port;
+    QSerialPort *port;
 
-    int baudRates[8];
+    QSerialPort::BaudRate baudRates[8];
     QStringList baudRateStrings;
     QTimer timer;
     void updateStatusBar(void);

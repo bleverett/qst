@@ -58,7 +58,7 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>20</y>
+      <y>24</y>
       <width>114</width>
       <height>21</height>
      </rect>
@@ -71,7 +71,7 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>40</y>
+      <y>44</y>
       <width>114</width>
       <height>21</height>
      </rect>
@@ -84,7 +84,7 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>60</y>
+      <y>64</y>
       <width>114</width>
       <height>21</height>
      </rect>
@@ -97,7 +97,7 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>80</y>
+      <y>84</y>
       <width>114</width>
       <height>21</height>
      </rect>
@@ -110,52 +110,13 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>100</y>
+      <y>104</y>
       <width>114</width>
       <height>21</height>
      </rect>
     </property>
     <property name="text">
      <string>115200</string>
-    </property>
-   </widget>
-   <widget class="QRadioButton" name="rb230400">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>120</y>
-      <width>114</width>
-      <height>21</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>230400</string>
-    </property>
-   </widget>
-   <widget class="QRadioButton" name="rb460800">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>140</y>
-      <width>114</width>
-      <height>21</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>460800</string>
-    </property>
-   </widget>
-   <widget class="QRadioButton" name="rb921600">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>160</y>
-      <width>114</width>
-      <height>21</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>921600</string>
     </property>
    </widget>
   </widget>

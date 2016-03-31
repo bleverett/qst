@@ -1,8 +1,8 @@
 # -------------------------------------------------
 # Project created by QtCreator 2010-03-28T13:06:00
 # -------------------------------------------------
-include(../qextserialport/src/qextserialport.pri)
 
+QT       += core gui widgets serialport
 TARGET = qst
 TEMPLATE = app
 SOURCES += main.cpp \
