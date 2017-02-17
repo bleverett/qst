@@ -45,7 +45,7 @@ private:
     QWidgetList sbList;
 
     // Settings from config file
-    int baudNdx;
+    uint baudNdx;
     bool hwFlow;
     bool openAtStart;
     QString deviceName;

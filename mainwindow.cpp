@@ -48,7 +48,7 @@ MainWindow::MainWindow(QWidget *parent)
     openAtStart = settings.value("openAtStart").toBool();
     deviceName  = settings.value("device").toString();
 
-    int brcount = sizeof(baudRates)/sizeof(int);
+    uint brcount = sizeof(baudRates)/sizeof(uint);
     if (baudNdx >= brcount)
         baudNdx = 0;
 
@@ -207,7 +207,8 @@ void MainWindow::config(void)
     // Load settings
     dlgUi.cbHwFlow->setChecked(hwFlow);
     dlgUi.cbOpenStart->setChecked(openAtStart);
-    bg.button(baudNdx)->setChecked(true);
+    if (bg.buttons().count() > (int)baudNdx)
+        bg.button(baudNdx)->setChecked(true);
 
     // Find serial ports available
 #ifdef _TTY_POSIX_
