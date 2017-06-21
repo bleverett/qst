@@ -18,3 +18,6 @@ win32:DEFINES += _TTY_WIN_
 CONFIG += debug
 OTHER_FILES += 
 RESOURCES += qst.qrc
+#For embedded device, in my case raspberry pi3
+target.path=/home/pi
+INSTALLS+= target
