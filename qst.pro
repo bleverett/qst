@@ -16,7 +16,9 @@ FORMS += mainwindow.ui \
 unix:DEFINES += _TTY_POSIX_
 win32:DEFINES += _TTY_WIN_
 CONFIG += debug
-OTHER_FILES += 
+OTHER_FILES += \ 
+    HISTORY \
+    VERSION
 RESOURCES += qst.qrc
 #For embedded device, in my case raspberry pi3
 target.path=/home/pi

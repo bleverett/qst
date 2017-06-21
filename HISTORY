@@ -1,0 +1,16 @@
+Here is the changes.
+
+V1.01 (2010): QT4 version original from Blake Leverett <bleverett@gmail.com>
+V1.02 (20141122) : Use higher baud rates - This may not work correctly on
+windows
+V1.03 (20170217) : Use Qt5 and qtserialport package - works with Qt5, and abandons the QExtSerialPort object in favor of QtSerialPort.
+The QExtSerialPort object was adopted by Qt and renamed QtSerialPort.
+V2.01 (20170621) : TerminalWidget addon and Bug Fixes by Olivier Lutzwiller <all-informatic@free.fr> /
+all-informatic.com/blog
+    -deported the timer at the end to avoid segmentation Error
+    when device is not reachable so we see "cannot open device"
+    popup for USB devices such as ttyUSB0 when rights is not sufficent, need sudo
+    -on select, copy, clear and paste where not hanled, making QAction::connect: No
+    such signal error
+    *Additions:
+    -added this file and make_tarball script system based on file VERSION
