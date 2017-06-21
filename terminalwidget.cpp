@@ -26,6 +26,7 @@
 //#include "qextserialenumerator.h"
 #include <QSerialPort>
 #include <QSerialPortInfo>
+#include <QClipboard>
 
 
 extern MainWindow* mainInstance;
@@ -146,3 +147,40 @@ QPlainTextEdit* TerminalWidget::getTerm()
 {
    return  ui->terminalTextEdit;
 }
+
+
+void TerminalWidget::clear(void)
+{
+    ui->terminalTextEdit->clear();
+}
+
+void TerminalWidget::select(void)
+{
+    ui->terminalTextEdit->selectAll();
+}
+
+void TerminalWidget::copy(void)
+{
+    ui->terminalTextEdit->copy();
+}
+
+void TerminalWidget::paste(void)
+{
+    MainWindow* parent = mainInstance;
+
+     if (parent == 0) {
+         return; // or some other error handling
+     }
+
+    QSerialPort *port= qobject_cast<QSerialPort*>(parent->port);
+    QClipboard *clipboard = QApplication::clipboard();
+    QString originalText = clipboard->text();
+
+    //Send it over serial line..
+   for (int i=0;i<originalText.length();i++)
+    {
+        char ch = originalText.at(i).toLatin1();
+        port->putChar(ch);
+    }
+}
+

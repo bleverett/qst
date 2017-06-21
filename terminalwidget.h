@@ -38,6 +38,10 @@ class TerminalWidget : public QWidget
     void disableTerm();
     QPlainTextEdit* getTerm();
     void pollSerial(QByteArray bytes);
+    void clear(void);
+    void select(void);
+    void copy(void);
+    void paste(void);
 
   public slots:
     void display(QByteArray const&);

@@ -44,6 +44,14 @@ private slots:
 
     void on_actionTerminal_triggered();
 
+    //TextEdit specific
+    void clear(void);
+    void select(void);
+    void copy(void);
+    void paste(void);
+
+    void close(void);
+
 private:
     //bool eventFilter(QObject *obj, QEvent *event);
     //QSerialPort *port;

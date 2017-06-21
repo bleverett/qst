@@ -35,6 +35,12 @@ MainWindow::MainWindow(QWidget *parent)
     connect(actionEnd_Logging, SIGNAL(triggered()), this, SLOT(endLogging()));
     connect(actionAbout_Qt, SIGNAL(triggered()), this, SLOT(aboutQt()));
 
+    connect(actionExit, SIGNAL(triggered()), this, SLOT(close()));
+    connect(actionClear_Screen, SIGNAL(triggered()), this, SLOT(clear()));
+    connect(actionSelect_all, SIGNAL(triggered()), this, SLOT(select()));
+    connect(actionCopy, SIGNAL(triggered()), this, SLOT(copy()));
+    connect(actionPaste, SIGNAL(triggered()), this, SLOT(paste()));
+
     baudRates[0] = QSerialPort::Baud9600;
     baudRates[1] = QSerialPort::Baud19200;
     baudRates[2] = QSerialPort::Baud38400;
@@ -453,4 +459,31 @@ void MainWindow::on_actionTerminal_triggered()
     }else {
         terminalWidget->disableTerm();
     }
+}
+
+
+void MainWindow::close(void)
+{
+    this->close();
+}
+
+
+void MainWindow::clear(void)
+{
+    terminalWidget->clear();
+}
+
+void MainWindow::select(void)
+{
+    terminalWidget->select();
+}
+
+void MainWindow::copy(void)
+{
+    terminalWidget->copy();
+}
+
+void MainWindow::paste()
+{
+    terminalWidget->paste();
 }
