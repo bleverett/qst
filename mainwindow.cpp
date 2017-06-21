@@ -4,6 +4,7 @@
 #include <QTimer>
 #include <QSerialPort>
 #include <QSerialPortInfo>
+#include <QClipboard>
 #include "mainwindow.h"
 #include "ui_config.h"
 #include "ui_about.h"
@@ -12,7 +13,18 @@ MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent), port(0), logFile(NULL)
 {
     setupUi(this);
-    textEdit->installEventFilter(this);
+    //textEdit->installEventFilter(this);
+
+    //We reuse TerminaWidget from QSerialTerm integrate it when terminal view is checked and cnx is ok
+    terminalWidget = new TerminalWidget;
+
+    //!NOTE textEdit=fromDeviceGridLayout->findChild<QPlainTextEdit*>("terminalTextEdit"); crashes
+    QPlainTextEdit *textEdit=terminalWidget->getTerm();
+
+    fromDeviceGridLayout->addWidget(terminalWidget);
+    textEdit->installEventFilter(terminalWidget);
+    terminalWidget->show();
+
 
     connect(actionConfig, SIGNAL(triggered()), this, SLOT(config()));
     connect(actionStart_Stop_Comm, SIGNAL(triggered()), this, SLOT(startStopComm()));
@@ -80,8 +92,8 @@ MainWindow::MainWindow(QWidget *parent)
         startStopComm();
 }
 
-// Grab keypresses meant for edit, send to serial port.
-bool MainWindow::eventFilter(QObject *obj, QEvent *event)
+// Grab keypresses meant for edit, send to serial port. => deported into terminalwidget.cpp
+/*bool MainWindow::eventFilter(QObject *obj, QEvent *event)
 {
     if (event->type() == QEvent::KeyPress)
     {
@@ -101,7 +113,7 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *event)
     else
         // standard event processing
         return QObject::eventFilter(obj, event);
-}
+}*/
 
 void MainWindow::updateStatusBar(void)
 {
@@ -158,6 +170,8 @@ void MainWindow::startStopComm(void)
         // close it
         delete port;
         port = NULL;
+        terminalWidget->disableTerm();
+        menuView->setDisabled(true);
     }
     else
     {
@@ -182,6 +196,22 @@ void MainWindow::startStopComm(void)
             QString s("Cannot open port ");
             s += device;
             QMessageBox::critical(this,"Error",s);
+
+            //if(actionTerminal->isChecked()) {
+            terminalWidget->disableTerm();
+            //}
+            menuView->setDisabled(true);
+
+        }else {
+
+             actionTerminal->setChecked(true);
+
+             //if(actionTerminal->isChecked()) {
+                terminalWidget->enableTerm();
+             //}
+
+            menuView->setEnabled(true);
+            //timer.start(100);
         }
     }
     // Update status bar
@@ -294,7 +324,7 @@ void MainWindow::pollSerial(void)
         logFile->write(bytes);
         logFile->flush();
     }
-    bytes.replace("\r", "");
+//  bytes.replace("\r", "");
 //    if (bytes.contains(8))
 //    {
 //        // Must parse backspace commands manually
@@ -318,11 +348,15 @@ void MainWindow::pollSerial(void)
 //        }
 //    }
 //    else
-    {
+/*  {
         textEdit->moveCursor(QTextCursor::End);
         textEdit->insertPlainText(bytes);
     }
-    textEdit->ensureCursorVisible();
+    textEdit->ensureCursorVisible();*/
+
+    //if(actionTerminal->isChecked()) {
+        terminalWidget->pollSerial(bytes);
+    //
     rxLed->setActive(true);
 }
 
@@ -368,6 +402,7 @@ void MainWindow::saveScreen(void)
         return;
     }
 
+    QPlainTextEdit *textEdit=terminalWidget->getTerm();
     file.write(textEdit->toPlainText().toLatin1());
 
     file.close();
@@ -409,4 +444,13 @@ void MainWindow::endLogging(void)
 void MainWindow::aboutQt(void)
 {
     QMessageBox::aboutQt(this, "About Qt");
+}
+
+void MainWindow::on_actionTerminal_triggered()
+{
+    if(actionTerminal->isChecked()) {
+        terminalWidget->enableTerm();
+    }else {
+        terminalWidget->disableTerm();
+    }
 }

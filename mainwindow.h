@@ -8,6 +8,9 @@
 #include "ui_mainwindow.h"
 #include "led.h"
 
+#include <QPlainTextEdit>
+#include "terminalwidget.h"
+
 namespace Ui
 {
     class MainWindow;
@@ -20,6 +23,11 @@ class MainWindow : public QMainWindow,
 
 public:
     MainWindow(QWidget *parent = 0);
+    QSerialPort *port;
+
+    QLed *txLed;  // Green left LED
+    QLed *rxLed;  // Red right LED
+    static MainWindow* GetInstance(void);//QWidget* parent = 0);
 
 public slots:
     void startStopComm(void);
@@ -34,9 +42,11 @@ private slots:
     void startLogging(void);
     void endLogging(void);
 
+    void on_actionTerminal_triggered();
+
 private:
-    bool eventFilter(QObject *obj, QEvent *event);
-    QSerialPort *port;
+    //bool eventFilter(QObject *obj, QEvent *event);
+    //QSerialPort *port;
 
     QSerialPort::BaudRate baudRates[8];
     QStringList baudRateStrings;
@@ -50,8 +60,12 @@ private:
     bool openAtStart;
     QString deviceName;
 
-    QLed *txLed;  // Green left LED
-    QLed *rxLed;  // Red right LED
+    // TerminalWidget
+    //Ui::MainWindow *ui;
+    TerminalWidget *terminalWidget;
+    //QPlainTextEdit *textEdit;
+    //QLed *txLed;  // Green left LED
+    //QLed *rxLed;  // Red right LED
     QFile *logFile;
 };
 

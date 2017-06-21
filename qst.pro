@@ -7,12 +7,15 @@ TARGET = qst
 TEMPLATE = app
 SOURCES += main.cpp \
     mainwindow.cpp \
-    led.cpp
+    led.cpp \
+    terminalwidget.cpp
 HEADERS += mainwindow.h \
-    led.h
+    led.h \
+    terminalwidget.h
 FORMS += mainwindow.ui \
     config.ui \
-    about.ui
+    about.ui \
+    terminalwidget.ui
 unix:DEFINES += _TTY_POSIX_
 win32:DEFINES += _TTY_WIN_
 CONFIG += debug
