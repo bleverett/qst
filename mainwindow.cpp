@@ -57,7 +57,7 @@ MainWindow::MainWindow(QWidget *parent)
     baudRateStrings.append("921600");
 
     connect(&timer, SIGNAL(timeout()), this, SLOT(pollSerial()));
-    timer.start(100);
+    //timer.start(100);
 
     // Get settings from config file (or, god forbid, registry)
     QSettings settings("QTapps","QST");
@@ -78,6 +78,7 @@ MainWindow::MainWindow(QWidget *parent)
     frame->setFrameShadow(QFrame::Sunken);
     sbList.append(frame);
     frame->setFixedWidth(33);
+
     txLed = new QLed(frame, QLed::green);
     txLed->setGeometry(1,1,15,15);
     rxLed = new QLed(frame, QLed::red);
@@ -207,6 +208,7 @@ void MainWindow::startStopComm(void)
             terminalWidget->disableTerm();
             //}
             menuView->setDisabled(true);
+            timer.stop();
 
         }else {
 
@@ -217,7 +219,7 @@ void MainWindow::startStopComm(void)
              //}
 
             menuView->setEnabled(true);
-            //timer.start(100);
+            timer.start(100);
         }
     }
     // Update status bar
