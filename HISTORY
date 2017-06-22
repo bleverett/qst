@@ -7,10 +7,13 @@ V1.03 (20170217) : Use Qt5 and qtserialport package - works with Qt5, and abando
 The QExtSerialPort object was adopted by Qt and renamed QtSerialPort.
 V2.01 (20170621) : TerminalWidget addon and Bug Fixes by Olivier Lutzwiller <all-informatic@free.fr> /
 all-informatic.com/blog
-    -deported the timer at the end to avoid segmentation Error
-    when device is not reachable so we see "cannot open device"
-    popup for USB devices such as ttyUSB0 when rights is not sufficent, need sudo
-    -on select, copy, clear and paste where not hanled, making QAction::connect: No
+    -on select, copy, clear and paste where not handled, making QAction::connect: No
     such signal error
     *Additions:
     -added this file and make_tarball script system based on file VERSION
+V2.02 (204170622) : HLed support by Olivier Lutzwiller <all-informatic@free.fr>
+    -with the HLed support, bmp files for led are not more needed
+    -timer should not be started until device is connected to avoid segmentation Error.     
+     This happens for USB devices such as ttyUSB0 when openAtStart was previouly set
+     and the device has been physically removed or when rights are not sufficent
+     to access to it (need sudo or be in group dialout)

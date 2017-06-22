@@ -8,10 +8,12 @@ TEMPLATE = app
 SOURCES += main.cpp \
     mainwindow.cpp \
     led.cpp \
-    terminalwidget.cpp
+    terminalwidget.cpp \
+    hled.cpp
 HEADERS += mainwindow.h \
     led.h \
-    terminalwidget.h
+    terminalwidget.h \
+    hled.h
 FORMS += mainwindow.ui \
     config.ui \
     about.ui \
