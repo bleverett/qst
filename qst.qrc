@@ -1,9 +1,5 @@
 <RCC>
     <qresource prefix="/img">
-        <file>GrnLEDOff.bmp</file>
-        <file>GrnLEDOn.bmp</file>
-        <file>RedLEDOff.bmp</file>
-        <file>RedLEDOn.bmp</file>
         <file>qst-icon.png</file>
         <file>qst-logo.png</file>
     </qresource>

@@ -1,0 +1,22 @@
+Here is the changes.
+
+V1.01 (2010): QT4 version original from Blake Leverett <bleverett@gmail.com>
+V1.02 (20141122) : Use higher baud rates - This may not work correctly on
+windows
+V1.03 (20170217) : Use Qt5 and qtserialport package - works with Qt5, and abandons the QExtSerialPort object in favor of QtSerialPort.
+The QExtSerialPort object was adopted by Qt and renamed QtSerialPort.
+V2.01 (20170621) : TerminalWidget addon and Bug Fixes by Olivier Lutzwiller <all-informatic@free.fr> /
+all-informatic.com/blog
+    -on select, copy, clear and paste where not handled, making QAction::connect: No
+    such signal error
+    *Additions:
+    -added this file and make_tarball script system based on file VERSION
+V2.02 (20170622) : HLed support by Olivier Lutzwiller <all-informatic@free.fr>
+    -with the HLed support, bmp files for led are not more needed
+    -timer should not be started until device is connected to avoid segmentation Error.     
+     This happens for USB devices such as ttyUSB0 when openAtStart was previouly set
+     and the device has been physically removed or when rights are not sufficent
+     to access to it (need sudo or to be in group dialout)
+V2.03 (20170630) : databits, parity and Stopbits support in config. by Olivier Lutzwiller <all-informatic@free.fr>
+     View is Terminal or Plot but this last one which use qCustomPlot 2.0.0 (http://www.qcustomplot.com/index.php/download)
+     who need to be installed in ../3rd-party/qcustomplot is not yet supported

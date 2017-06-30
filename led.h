@@ -2,6 +2,7 @@
 #define LED_H
 
 #include <QLabel>
+#include "hled.h"
 
 class QLed : public QLabel
 {
@@ -14,6 +15,7 @@ public:
 private:
     bool isOnVal;
     ledColor color;
+    HLed *Hled;
 };
 
 
