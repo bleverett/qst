@@ -172,7 +172,7 @@
     </rect>
    </property>
    <property name="text">
-    <string>Ver 2.0</string>
+    <string>Ver 2.02</string>
    </property>
   </widget>
   <widget class="QLabel" name="label_10">
@@ -185,7 +185,7 @@
     </rect>
    </property>
    <property name="text">
-    <string>Terminalwidget (v2.01) : Olivier Lutzwiller</string>
+    <string>Terminalwidget (v2.0+) : Olivier Lutzwiller</string>
    </property>
   </widget>
   <widget class="QLabel" name="label_11">

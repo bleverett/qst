@@ -4,16 +4,22 @@
 #include <QTimer>
 #include <QSerialPort>
 #include <QSerialPortInfo>
+
+
 #include <QClipboard>
 #include "mainwindow.h"
 #include "ui_config.h"
 #include "ui_about.h"
+
+#include <iostream>
+#include <ostream>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent), port(0), logFile(NULL)
 {
     setupUi(this);
     //textEdit->installEventFilter(this);
+
 
     //We reuse TerminaWidget from QSerialTerm integrate it when terminal view is checked and cnx is ok
     terminalWidget = new TerminalWidget;
@@ -23,8 +29,12 @@ MainWindow::MainWindow(QWidget *parent)
 
     fromDeviceGridLayout->addWidget(terminalWidget);
     textEdit->installEventFilter(terminalWidget);
-    terminalWidget->show();
+    //terminalWidget->show();
 
+
+    customPlotZoomWidget= new CustomPlotZoomWidget;
+    fromDeviceGridLayout->addWidget(customPlotZoomWidget);
+    //customPlotZoomWidget->show();
 
     connect(actionConfig, SIGNAL(triggered()), this, SLOT(config()));
     connect(actionStart_Stop_Comm, SIGNAL(triggered()), this, SLOT(startStopComm()));
@@ -41,11 +51,23 @@ MainWindow::MainWindow(QWidget *parent)
     connect(actionCopy, SIGNAL(triggered()), this, SLOT(copy()));
     connect(actionPaste, SIGNAL(triggered()), this, SLOT(paste()));
 
-    baudRates[0] = QSerialPort::Baud9600;
+   /* baudRates[0] = QSerialPort::Baud9600;
     baudRates[1] = QSerialPort::Baud19200;
     baudRates[2] = QSerialPort::Baud38400;
     baudRates[3] = QSerialPort::Baud57600;
     baudRates[4] = QSerialPort::Baud115200;
+*/
+
+    baudRates[0] = BaudrateExt::Baud9600;
+    baudRates[1] = BaudrateExt::Baud19200;
+    baudRates[2] = BaudrateExt::Baud38400;
+    baudRates[3] = BaudrateExt::Baud57600;
+    baudRates[4] = BaudrateExt::Baud115200;
+    baudRates[5] = BaudrateExt::Baud230400;
+    baudRates[6] = BaudrateExt::Baud460800;
+    baudRates[7] = BaudrateExt::Baud921600;
+
+
 
     baudRateStrings.append("9600");
     baudRateStrings.append("19200");
@@ -59,12 +81,24 @@ MainWindow::MainWindow(QWidget *parent)
     connect(&timer, SIGNAL(timeout()), this, SLOT(pollSerial()));
     //timer.start(100);
 
-    // Get settings from config file (or, god forbid, registry)
+    //Terminal view per default
+    fromDeviceActionGroup = new QActionGroup(this);
+    fromDeviceActionGroup->setExclusive(true);
+    fromDeviceActionGroup->addAction(actionPlot);
+    fromDeviceActionGroup->addAction(actionTerminal);
+    actionTerminal->setChecked(true);
+    connect(fromDeviceActionGroup, SIGNAL(triggered(QAction*)), this, SLOT(view(QAction*)));
+
+    // Get settings from config file .config/QTapps/QST.conf (or, god forbid, registry)
     QSettings settings("QTapps","QST");
-    baudNdx     = settings.value("baudNdx").toInt();
-    hwFlow      = settings.value("hwflow").toBool();
-    openAtStart = settings.value("openAtStart").toBool();
-    deviceName  = settings.value("device").toString();
+
+    baudNdx      = settings.value("baudNdx").toInt();
+    hwFlow       = settings.value("hwflow").toBool();
+    openAtStart  = settings.value("openAtStart").toBool();
+    deviceName   = settings.value("device").toString();
+    dataBitsIndex= settings.value("databitsNdx").toInt();
+    parityIndex  = settings.value("parityNdx").toInt();
+    stopBitsIndex= settings.value("stopbitsNdx").toInt();
 
     uint brcount = sizeof(baudRates)/sizeof(uint);
     if (baudNdx >= brcount)
@@ -142,18 +176,46 @@ void MainWindow::updateStatusBar(void)
         lbl = static_cast<QLabel*> (sbList.at(1));
         QString s = port->portName();
         lbl->setText(s);
+
         lbl = static_cast<QLabel*> (sbList.at(2));
         s = baudRateStrings.at(baudNdx);
         lbl->setText(s);
+
+         //Build dynamically a thiong like s = QString("N-8-1");
         lbl = static_cast<QLabel*> (sbList.at(3));
-        s = QString("N-8-1");
+        s = QString("");
+        if(parityIndex == 0) {
+            s=s+"N";
+        } else if(parityIndex == 1) {
+            s=s+"O";
+        } else {
+            s=s+"E";
+        }
+        s=s+"-";
+        if(dataBitsIndex == 0) {
+            s=s+"8";
+        } else {
+            s=s+"7";
+        }
+        s=s+"-";
+        if(stopBitsIndex == 0) {
+            s=s+"1";
+        } else {
+            s=s+"2";
+        }
         lbl->setText(s);
+
         lbl = static_cast<QLabel*> (sbList.at(4));
-        s = QString("No Flow Control");
+        if(hwFlow)
+            s = QString("Hardware Flow Control");
+        else
+            s = QString("No Flow Control");
         lbl->setText(s);
+
         lbl = static_cast<QLabel*> (sbList.at(5));
         s = QString("UNIX CR/LF");
         lbl->setText(s);
+
         for (int i=1;i<5;i++)
         {
             QLabel *lbl = static_cast<QLabel*>(sbList.at(i));
@@ -178,6 +240,7 @@ void MainWindow::startStopComm(void)
         delete port;
         port = NULL;
         terminalWidget->disableTerm();
+        customPlotZoomWidget->hide();
         menuView->setDisabled(true);
     }
     else
@@ -191,9 +254,39 @@ void MainWindow::startStopComm(void)
         QSerialPortInfo pinfo;
         port = new QSerialPort(device, this);
         port->setBaudRate(baudRates[baudNdx]);
-        port->setDataBits(QSerialPort::Data8);
-        port->setParity(QSerialPort::NoParity);
-        port->setStopBits(QSerialPort::OneStop);
+
+
+        QSerialPort::DataBits dataBits;
+        QSerialPort::Parity parity;
+        QSerialPort::StopBits stopBits;
+
+        // Set data bits according to the selected index
+        if(dataBitsIndex == 0) {
+            dataBits = QSerialPort::Data8;
+        } else {
+            dataBits = QSerialPort::Data7;
+        }
+        port->setDataBits(dataBits);
+
+         // Set parity according to the selected index
+        if(parityIndex == 0) {
+            parity = QSerialPort::NoParity;
+        } else if(parityIndex == 1) {
+            parity = QSerialPort::OddParity;
+        } else {
+            parity = QSerialPort::EvenParity;
+        }
+        port->setParity(parity);
+
+        // Set stop bits according to the selected index
+        if(stopBitsIndex == 0) {
+            stopBits = QSerialPort::OneStop;
+        } else {
+            stopBits = QSerialPort::TwoStop;
+        }
+        port->setStopBits(stopBits);
+
+
         port->setFlowControl(hwFlow ? QSerialPort::HardwareControl : QSerialPort::NoFlowControl);
 
         if (!port->open(QIODevice::ReadWrite))
@@ -205,18 +298,27 @@ void MainWindow::startStopComm(void)
             QMessageBox::critical(this,"Error",s);
 
             //if(actionTerminal->isChecked()) {
-            terminalWidget->disableTerm();
+                customPlotZoomWidget->hide();
+                terminalWidget->disableTerm();
             //}
             menuView->setDisabled(true);
             timer.stop();
 
         }else {
 
-             actionTerminal->setChecked(true);
+             //actionTerminal->setChecked(true);
 
-             //if(actionTerminal->isChecked()) {
+             if(actionTerminal->isChecked()) {
+                customPlotZoomWidget->hide();
                 terminalWidget->enableTerm();
-             //}
+             }
+
+             if(actionPlot->isChecked()){
+
+                QMessageBox::information(this,"This View is not yet finihed - be patient",value );
+                //customPlotZoomWidget->show();
+                terminalWidget->hide();
+             }
 
             menuView->setEnabled(true);
             timer.start(100);
@@ -241,12 +343,31 @@ void MainWindow::config(void)
     bg.addButton(dlgUi.rb38400, 2);
     bg.addButton(dlgUi.rb57600, 3);
     bg.addButton(dlgUi.rb115200, 4);
+    bg.addButton(dlgUi.rb230400, 5);
+    bg.addButton(dlgUi.rb460800, 6);
+    bg.addButton(dlgUi.rb921600, 7);
+
+    // Populate data bits combo box
+    dlgUi.comboData->addItem("8 bits");
+    dlgUi.comboData->addItem("7 bits");
+
+    // Populate parity combo box
+    dlgUi.comboParity->addItem("none");
+    dlgUi.comboParity->addItem("odd");
+    dlgUi.comboParity->addItem("even");
+
+    // Populate stop bits combo box
+    dlgUi.comboStop->addItem("1 bit");
+    dlgUi.comboStop->addItem("2 bits");
 
     // Load settings
     dlgUi.cbHwFlow->setChecked(hwFlow);
     dlgUi.cbOpenStart->setChecked(openAtStart);
     if (bg.buttons().count() > (int)baudNdx)
         bg.button(baudNdx)->setChecked(true);
+    dlgUi.comboData->setCurrentIndex(dataBitsIndex);
+    dlgUi.comboParity->setCurrentIndex(parityIndex);
+    dlgUi.comboStop->setCurrentIndex(stopBitsIndex);
 
     // Find serial ports available
 #ifdef _TTY_POSIX_
@@ -254,6 +375,7 @@ void MainWindow::config(void)
     QStringList filterList("ttyS*");
     filterList += QStringList("ttyUSB*");
     filterList += QStringList("ttyACM*");
+    filterList += QStringList("ttyAMA*");
     dir.setNameFilters(filterList);
     QStringList devices = dir.entryList(QDir::System);
 #elif defined(_TTY_WIN_)
@@ -292,24 +414,37 @@ void MainWindow::config(void)
 
     if (config.result() == QDialog::Accepted)
     {
-        // Save settings
+        // Read new settings from Gui
+        hwFlow = dlgUi.cbHwFlow->isChecked();
+        openAtStart = dlgUi.cbOpenStart->isChecked();
+        baudNdx = bg.checkedId();
+        deviceName = dlgUi.listPorts->currentItem()->text();
+
+        dataBitsIndex = dlgUi.comboData->currentIndex();
+        parityIndex   = dlgUi.comboParity->currentIndex();
+        stopBitsIndex = dlgUi.comboStop->currentIndex();
+
+        //and save it to config file
         QSettings settings("QTapps","QST");
-        settings.setValue("hwflow", dlgUi.cbHwFlow->isChecked());
-        settings.setValue("openAtStart", dlgUi.cbOpenStart->isChecked());
-        settings.setValue("baudNdx", bg.checkedId());
+        settings.setValue("hwflow", hwFlow);
+        settings.setValue("openAtStart", openAtStart);
+        settings.setValue("baudNdx", baudNdx);
+
+        settings.setValue("databitsNdx",dataBitsIndex);
+        settings.setValue("parityNdx", parityIndex);
+        settings.setValue("stopbitsNdx",stopBitsIndex);
+
+
         if(dlgUi.listPorts->selectedItems().count()!=1)
             dlgUi.listPorts->setCurrentRow(0);
         settings.setValue("device", dlgUi.listPorts->currentItem()->text());
+
         // Open serial port
         if (port)
         {
             delete port;
             port = NULL;
         }
-
-        hwFlow = dlgUi.cbHwFlow->isChecked();
-        baudNdx = bg.checkedId();
-        deviceName = dlgUi.listPorts->currentItem()->text();
 
         startStopComm();
     }
@@ -488,4 +623,20 @@ void MainWindow::copy(void)
 void MainWindow::paste()
 {
     terminalWidget->paste();
+}
+
+void MainWindow::view(QAction *action) {
+    QString view = action->text();
+
+    if(view == "Plot") {
+        QMessageBox::information(this,"This View is not yet finished - be patient",value );
+       // customPlotZoomWidget->show();
+        terminalWidget->hide();
+    }
+
+    if(view == "Terminal")   {
+         customPlotZoomWidget->hide();
+         terminalWidget->enableTerm();
+    }
+
 }

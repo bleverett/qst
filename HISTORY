@@ -11,9 +11,12 @@ all-informatic.com/blog
     such signal error
     *Additions:
     -added this file and make_tarball script system based on file VERSION
-V2.02 (204170622) : HLed support by Olivier Lutzwiller <all-informatic@free.fr>
+V2.02 (20170622) : HLed support by Olivier Lutzwiller <all-informatic@free.fr>
     -with the HLed support, bmp files for led are not more needed
     -timer should not be started until device is connected to avoid segmentation Error.     
      This happens for USB devices such as ttyUSB0 when openAtStart was previouly set
      and the device has been physically removed or when rights are not sufficent
-     to access to it (need sudo or be in group dialout)
+     to access to it (need sudo or to be in group dialout)
+V2.03 (20170630) : databits, parity and Stopbits support in config. by Olivier Lutzwiller <all-informatic@free.fr>
+     View is Terminal or Plot but this last one which use qCustomPlot 2.0.0 (http://www.qcustomplot.com/index.php/download)
+     who need to be installed in ../3rd-party/qcustomplot is not yet supported
