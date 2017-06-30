@@ -315,7 +315,7 @@ void MainWindow::startStopComm(void)
 
              if(actionPlot->isChecked()){
 
-                QMessageBox::information(this,"This View is not yet finihed - be patient",value );
+                QMessageBox::information(this,"info","This View is not yet finished - be patient");
                 //customPlotZoomWidget->show();
                 terminalWidget->hide();
              }
@@ -629,7 +629,7 @@ void MainWindow::view(QAction *action) {
     QString view = action->text();
 
     if(view == "Plot") {
-        QMessageBox::information(this,"This View is not yet finished - be patient",value );
+        QMessageBox::information(this,"info","This View is not yet finished - be patient" );
        // customPlotZoomWidget->show();
         terminalWidget->hide();
     }
